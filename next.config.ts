@@ -18,6 +18,13 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  
+  // Allow server actions to run longer
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '4.5mb',
+    }
+  }
 };
 
 export default nextConfig;
