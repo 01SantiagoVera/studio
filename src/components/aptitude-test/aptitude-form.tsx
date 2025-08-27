@@ -31,21 +31,21 @@ export function AptitudeForm({ questions, answers, onAnswerChange, onSubmit, isA
         <CardDescription>Para cada afirmación, selecciona la opción que mejor describa qué tanto se parece a ti.</CardDescription>
       </CardHeader>
       <CardContent className="p-6 pt-0">
-        <div className="space-y-6">
+        <div className="space-y-4">
           {questions.map((question, index) => (
             <div key={question.id}>
               <div className="space-y-3">
-                <Label className="text-base font-medium">
+                <Label className="text-xl font-medium">
                   {index + 1}. {question.text}
                 </Label>
                 <RadioGroup
                   onValueChange={(value) => onAnswerChange(question.id, value)}
                   value={answers[question.id]?.toString()}
-                  className="flex justify-between items-center pt-2"
+                  className="flex flex-wrap justify-between items-center pt-2 gap-x-2 gap-y-4"
                   aria-label={question.text}
                 >
                   {[1, 2, 3, 4, 5].map((value) => (
-                    <div key={value} className="flex flex-col items-center space-y-2 w-24">
+                    <div key={value} className="flex flex-col items-center space-y-2 w-20 flex-shrink-0">
                        <RadioGroupItem value={value.toString()} id={`q${question.id}-v${value}`} className="h-6 w-6" />
                       <Label htmlFor={`q${question.id}-v${value}`} className="text-sm text-muted-foreground text-center h-10 leading-tight">
                         {scaleLabels[value]}
@@ -54,7 +54,7 @@ export function AptitudeForm({ questions, answers, onAnswerChange, onSubmit, isA
                   ))}
                 </RadioGroup>
               </div>
-              {index < questions.length - 1 && <Separator className="mt-6"/>}
+              {index < questions.length - 1 && <Separator className="mt-4"/>}
             </div>
           ))}
         </div>
