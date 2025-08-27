@@ -11,27 +11,23 @@ Para empezar, echa un vistazo al código fuente, comenzando por `src/app/page.ts
 - Node.js (versión 18 o superior)
 - npm o yarn
 
-### Instalación
+### Instalación y Ejecución
 
-1. Clona el repositorio.
-2. Instala las dependencias:
-   ```bash
-   npm install
-   ```
-
-### Ejecutar el Proyecto Localmente
-
-Para ejecutar el proyecto en tu entorno local, necesitarás tener dos terminales abiertas, ya que hay dos procesos que deben correr simultáneamente: el servidor de desarrollo de Next.js (para la interfaz de usuario) y el servidor de Genkit (para las funciones de inteligencia artificial).
-
-1.  **En tu primera terminal**, ejecuta este comando para iniciar el servidor de Next.js:
+1.  **Instala las dependencias:** Antes que nada, abre una terminal en la raíz del proyecto y ejecuta el siguiente comando para instalar todas las librerías necesarias. Este es un paso crucial.
     ```bash
-    npm run dev
-    ```
-    Tu aplicación estará disponible en `http://localhost:9002`.
-
-2.  **En tu segunda terminal**, ejecuta este comando para iniciar los flujos de Genkit que gestionan la IA:
-    ```bash
-    npm run genkit:dev
+    npm install
     ```
 
-Ambos procesos necesitan permanecer en ejecución mientras desarrollas.
+2.  **Ejecuta los servidores de desarrollo:** Una vez instaladas las dependencias, necesitarás tener **dos terminales abiertas** para ejecutar la aplicación, ya que hay dos procesos que deben correr simultáneamente.
+
+    -   **En tu primera terminal**, inicia el servidor de Next.js para la interfaz de usuario:
+        ```bash
+        npm run dev
+        ```
+
+    -   **En tu segunda terminal**, inicia los flujos de Genkit para las funciones de IA:
+        ```bash
+        npm run genkit:dev
+        ```
+
+3.  **Abre la aplicación:** Tu aplicación estará disponible en `http://localhost:9002`. Ambos procesos en las terminales deben permanecer en ejecución mientras desarrollas.
