@@ -1,8 +1,7 @@
 'use server';
 
 import { getPersonalizedRecommendations, PersonalizedRecommendationsInput } from '@/ai/flows/personalized-recommendations';
-import { db } from '@/lib/firebase';
-import { collection, addDoc, getDocs, doc, getDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { interviewStore } from '@/lib/store';
 
 export async function fetchRecommendations(scores: PersonalizedRecommendationsInput) {
   try {
@@ -16,14 +15,16 @@ export async function fetchRecommendations(scores: PersonalizedRecommendationsIn
 
 export async function createInterview(name: string) {
   try {
-    const docRef = await addDoc(collection(db, "interviews"), {
+    const newInterview = {
+      id: crypto.randomUUID(),
       name,
-      createdAt: serverTimestamp(),
+      createdAt: new Date(),
+      status: 'pending' as const,
       scores: null,
       recommendations: null,
-      status: 'pending'
-    });
-    return { id: docRef.id };
+    };
+    interviewStore.set(newInterview.id, newInterview);
+    return { id: newInterview.id };
   } catch (error) {
     console.error("Error creating interview:", error);
     return { error: "Failed to create interview." };
@@ -32,11 +33,7 @@ export async function createInterview(name: string) {
 
 export async function getInterviews() {
   try {
-    const querySnapshot = await getDocs(collection(db, "interviews"));
-    const interviews = querySnapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }));
+    const interviews = Array.from(interviewStore.values());
     return { interviews };
   } catch (error) {
     console.error("Error fetching interviews:", error);
@@ -46,11 +43,9 @@ export async function getInterviews() {
 
 export async function getInterview(id: string) {
     try {
-        const docRef = doc(db, "interviews", id);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-            return { interview: { id: docSnap.id, ...docSnap.data() } };
+        const interview = interviewStore.get(id);
+        if (interview) {
+            return { interview };
         } else {
             return { error: "No such interview!" };
         }
@@ -60,17 +55,21 @@ export async function getInterview(id: string) {
     }
 }
 
-
 export async function saveInterviewResults(id: string, scores: PersonalizedRecommendationsInput, recommendations: string) {
   try {
-    const docRef = doc(db, "interviews", id);
-    await updateDoc(docRef, {
-      scores,
-      recommendations,
-      status: 'completed',
-      completedAt: serverTimestamp()
-    });
-    return { success: true };
+    const interview = interviewStore.get(id);
+    if (interview) {
+      const updatedInterview = {
+        ...interview,
+        scores,
+        recommendations,
+        status: 'completed' as const,
+        completedAt: new Date()
+      };
+      interviewStore.set(id, updatedInterview);
+      return { success: true };
+    }
+    return { error: "Interview not found." };
   } catch (error) {
     console.error("Error updating interview:", error);
     return { error: "Failed to save interview results." };

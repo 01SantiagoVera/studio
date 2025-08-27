@@ -10,8 +10,8 @@ interface Interview {
     id: string;
     name: string;
     status: 'pending' | 'completed';
-    createdAt: any;
-    completedAt?: any;
+    createdAt: Date;
+    completedAt?: Date;
 }
 
 interface InterviewListProps {
@@ -20,9 +20,9 @@ interface InterviewListProps {
 
 export default function InterviewList({ interviews }: InterviewListProps) {
   const sortedInterviews = [...interviews].sort((a, b) => {
-    const dateA = a.createdAt?.toDate() || new Date(0);
-    const dateB = b.createdAt?.toDate() || new Date(0);
-    return dateB.getTime() - dateA.getTime();
+    const dateA = a.createdAt || new Date(0);
+    const dateB = b.createdAt || new Date(0);
+    return new Date(dateB).getTime() - new Date(dateA).getTime();
   });
 
   return (
@@ -51,7 +51,7 @@ export default function InterviewList({ interviews }: InterviewListProps) {
                     </Badge>
                   </TableCell>
                   <TableCell>
-                    {interview.createdAt ? new Date(interview.createdAt.toDate()).toLocaleDateString() : 'N/A'}
+                    {interview.createdAt ? new Date(interview.createdAt).toLocaleDateString() : 'N/A'}
                   </TableCell>
                   <TableCell>
                     <Button asChild variant="outline" size="sm" disabled={interview.status !== 'completed'}>

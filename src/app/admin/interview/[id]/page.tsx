@@ -21,8 +21,8 @@ interface Interview {
     scores: Scores;
     recommendations: string;
     status: 'pending' | 'completed';
-    createdAt: any;
-    completedAt?: any;
+    createdAt: Date;
+    completedAt?: Date;
 }
 
 
@@ -89,7 +89,7 @@ export default function InterviewDetailsPage({ params }: { params: { id: string 
                 <div className="text-center mt-4">
                     <h1 className="text-4xl md:text-5xl font-bold text-primary mb-2">Resultados de {interview.name}</h1>
                     <p className="text-lg text-muted-foreground">
-                        {interview.status === 'completed' ? `Completado el ${new Date(interview.completedAt?.toDate()).toLocaleString()}` : 'Pendiente'}
+                        {interview.status === 'completed' && interview.completedAt ? `Completado el ${new Date(interview.completedAt).toLocaleString()}` : 'Pendiente'}
                     </p>
                 </div>
             </header>
