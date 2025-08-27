@@ -39,7 +39,7 @@ Puntaje de Ideador: {{{ideatorScore}}}
 Puntaje de Desarrollador: {{{developerScore}}}
 Puntaje de Implementador: {{{implementerScore}}}
 
-Considera las fortalezas indicadas por los puntajes más altos y sugiere trayectorias profesionales relevantes, recursos de desarrollo o roles que se alineen con estas fortalezas. Proporciona consejos específicos y procesables para ayudar al usuario a aprovechar sus aptitudes para el crecimiento profesional. La respuesta debe estar completamente en español.`,
+Considera las fortalezas indicadas por los puntajes más altos y sugiere trayectorias profesionales relevantes, recursos de desarrollo o roles que se alineen con estas fortalezas. Proporciona consejos específicos y procesables para ayudar al usuario a aprovechar sus aptitudes para el crecimiento profesional. La respuesta debe estar completamente en español. No menciones los puntajes numéricos en tu respuesta.`,
 });
 
 const personalizedRecommendationsFlow = ai.defineFlow(

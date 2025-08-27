@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
 import { getInterview } from '@/app/actions';
 import { AptitudeResults } from '@/components/aptitude-test/aptitude-results';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Loader2 } from 'lucide-react';
@@ -95,7 +95,7 @@ export default function InterviewDetailsPage({ params }: { params: { id: string 
             </header>
 
             <Card className="overflow-hidden shadow-lg">
-                {interview.status === 'completed' ? (
+                {interview.status === 'completed' && interview.scores && interview.recommendations ? (
                     <AptitudeResults
                         scoresData={chartData}
                         strongestAptitude={strongestAptitude}
@@ -103,9 +103,9 @@ export default function InterviewDetailsPage({ params }: { params: { id: string 
                         isAdminView={true}
                     />
                 ) : (
-                    <div className="p-16 text-center">
-                        <p className="text-muted-foreground">El entrevistado aún no ha completado la prueba.</p>
-                    </div>
+                    <CardContent className="p-16 text-center">
+                        <p className="text-muted-foreground">El entrevistado aún no ha completado la prueba o los datos no están disponibles.</p>
+                    </CardContent>
                 )}
             </Card>
         </div>

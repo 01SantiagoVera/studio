@@ -1,7 +1,7 @@
 import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis, Tooltip, Cell } from 'recharts';
 import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Trophy } from 'lucide-react';
+import { Trophy } from 'lucide-react';
 
 interface AptitudeResultsProps {
   scoresData: { name: string; score: number }[];
@@ -55,15 +55,15 @@ export function AptitudeResults({ scoresData, strongestAptitude, recommendations
   return (
     <>
       <CardHeader className="text-center p-6">
-        <CardTitle className="text-2xl font-bold font-headline">Sus Resultados</CardTitle>
+        <CardTitle className="text-2xl font-bold font-headline">Tus Resultados</CardTitle>
         <CardDescription>
-          {isAdminView ? "Estos son los puntajes de aptitud y recomendaciones personalizadas." : "Estas son sus recomendaciones personalizadas basadas en sus respuestas."}
+          {isAdminView ? "Estos son los puntajes de aptitud y recomendaciones personalizadas." : "Estas son tus recomendaciones personalizadas basadas en tus respuestas."}
         </CardDescription>
       </CardHeader>
       <CardContent className="p-6 grid gap-8 md:grid-cols-2">
         <div className="space-y-6">
             <h3 className="text-xl font-semibold text-primary font-headline">
-              {isAdminView ? 'Visualización de Puntajes' : 'Aptitud Principal'}
+              {isAdminView ? 'Visualización de Puntajes' : 'Tu Aptitud Principal'}
             </h3>
             {isAdminView ? (
               <div className="h-[300px] w-full">
@@ -83,16 +83,10 @@ export function AptitudeResults({ scoresData, strongestAptitude, recommendations
             ) : (
               <div className="flex flex-col items-center justify-center text-center p-8 bg-secondary/30 rounded-lg">
                   <Trophy className="h-16 w-16 text-accent mb-4" />
-                  <p className="text-lg">Su aptitud más destacada es:</p>
+                  <p className="text-lg">Tu aptitud más destacada es:</p>
                   <p className="text-2xl font-bold text-accent">{strongestAptitude}</p>
               </div>
             )}
-             <div className="flex items-center justify-center space-x-2 rounded-lg bg-accent/10 p-4 border border-accent/20">
-                <CheckCircle className="h-6 w-6 text-accent" />
-                <p className="text-center text-sm font-medium">
-                Su aptitud más fuerte es: <strong className="text-accent">{strongestAptitude}</strong>
-                </p>
-            </div>
         </div>
         <div className="space-y-4">
             <h3 className="text-xl font-semibold text-primary font-headline">Recomendaciones Personales</h3>
@@ -113,7 +107,7 @@ export function AptitudeResults({ scoresData, strongestAptitude, recommendations
        {!isAdminView && (
             <CardFooter className="p-6 text-center flex-col items-center justify-center bg-secondary/30">
                 <p className="font-bold text-lg">¡Gracias por completar la evaluación!</p>
-                <p className="text-muted-foreground">Sus resultados han sido enviados al administrador.</p>
+                <p className="text-muted-foreground">Tus resultados han sido enviados al administrador.</p>
             </CardFooter>
        )}
     </>
