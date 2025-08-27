@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
 import { createInterview, getInterviews, updateInterviewName } from '../actions';
@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import InterviewList from '@/components/admin/interview-list';
+import AdminDashboard from '@/components/admin/admin-dashboard';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,11 +22,25 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { type Aptitude } from '@/lib/questions';
+
+type Scores = {
+  [key in Aptitude]: number;
+};
+
+interface Interview {
+    id: string;
+    name: string;
+    scores: Scores | null;
+    status: 'pending' | 'completed';
+    createdAt: Date;
+    completedAt?: Date;
+}
 
 export default function AdminPage() {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
-  const [interviews, setInterviews] = useState([]);
+  const [interviews, setInterviews] = useState<Interview[]>([]);
   const [newName, setNewName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState('');
@@ -102,6 +117,29 @@ export default function AdminPage() {
     router.push('/login');
   };
 
+  const dashboardStats = useMemo(() => {
+    const completed = interviews.filter(i => i.status === 'completed');
+    const pending = interviews.filter(i => i.status === 'pending');
+
+    const profileCounts = completed.reduce((acc, interview) => {
+        if (!interview.scores) return acc;
+        
+        const strongestAptitude = (Object.keys(interview.scores) as Aptitude[]).reduce((max, key) => 
+            (interview.scores as Scores)[key] > (interview.scores as Scores)[max] ? key : max, 'Clarifier'
+        );
+
+        acc[strongestAptitude] = (acc[strongestAptitude] || 0) + 1;
+        return acc;
+    }, {} as { [key in Aptitude]: number });
+
+
+    return {
+      completedCount: completed.length,
+      pendingCount: pending.length,
+      profileCounts,
+    }
+  }, [interviews]);
+
   if (loading || !user) {
     return <div className="flex h-screen w-full items-center justify-center"><p>Cargando...</p></div>;
   }
@@ -114,6 +152,8 @@ export default function AdminPage() {
             <h1 className="text-4xl md:text-5xl font-bold text-primary">Panel de Administrador</h1>
             <Button onClick={handleLogout} variant="outline">Cerrar Sesión</Button>
           </header>
+
+          <AdminDashboard stats={dashboardStats} />
 
           <Card className="mb-8">
             <CardHeader>
@@ -188,4 +228,5 @@ export default function AdminPage() {
     </Dialog>
     </>
   );
-}
+
+    
