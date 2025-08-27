@@ -14,12 +14,21 @@ interface AptitudeFormProps {
   isLoading: boolean;
 }
 
+const scaleLabels: { [key: number]: string } = {
+  1: 'No me parezco en nada',
+  2: 'Me parezco poco',
+  3: 'Neutral',
+  4: 'Me parezco bastante',
+  5: 'Me parezco perfectamente',
+};
+
+
 export function AptitudeForm({ questions, answers, onAnswerChange, onSubmit, isAllAnswered, isLoading }: AptitudeFormProps) {
   return (
     <>
       <CardHeader className="p-6">
         <CardTitle className="text-2xl font-bold font-headline">Cuestionario de Aptitudes</CardTitle>
-        <CardDescription>Responda cada pregunta en una escala del 1 al 5, donde 1 es "No me parezco en nada" y 5 es "Me parezco perfectamente".</CardDescription>
+        <CardDescription>Para cada afirmación, selecciona la opción que mejor describa qué tanto se parece a ti.</CardDescription>
       </CardHeader>
       <CardContent className="p-6 pt-0">
         <div className="space-y-6">
@@ -36,9 +45,11 @@ export function AptitudeForm({ questions, answers, onAnswerChange, onSubmit, isA
                   aria-label={question.text}
                 >
                   {[1, 2, 3, 4, 5].map((value) => (
-                    <div key={value} className="flex flex-col items-center space-y-2">
-                      <Label htmlFor={`q${question.id}-v${value}`} className="text-sm text-muted-foreground">{value}</Label>
-                      <RadioGroupItem value={value.toString()} id={`q${question.id}-v${value}`} className="h-6 w-6" />
+                    <div key={value} className="flex flex-col items-center space-y-2 w-24">
+                       <RadioGroupItem value={value.toString()} id={`q${question.id}-v${value}`} className="h-6 w-6" />
+                      <Label htmlFor={`q${question.id}-v${value}`} className="text-sm text-muted-foreground text-center h-10 leading-tight">
+                        {scaleLabels[value]}
+                      </Label>
                     </div>
                   ))}
                 </RadioGroup>
