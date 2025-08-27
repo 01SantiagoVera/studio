@@ -8,26 +8,12 @@
 # Testing
 /coverage
 
-# Next.js build output
+# Next.js
 /.next/
 /out/
 
 # Production
 /build
-
-# Vercel
-.vercel
-
-# Static
-/public/static
-
-# dotenv
-.env
-.env*.local
-.env.development.local
-.env.test.local
-.env.production.local
-*.env
 
 # Misc
 .DS_Store
@@ -39,11 +25,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# Editor directories and files
-.vscode
-.idea
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Local .env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE files
+.idea/
+.vscode/
