@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
 import { Button } from '../ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface Interview {
     id: string;
@@ -16,14 +17,23 @@ interface Interview {
 
 interface InterviewListProps {
   interviews: Interview[];
+  onEdit: (interview: Interview) => void;
 }
 
-export default function InterviewList({ interviews }: InterviewListProps) {
+export default function InterviewList({ interviews, onEdit }: InterviewListProps) {
+  const { toast } = useToast();
+  
   const sortedInterviews = [...interviews].sort((a, b) => {
     const dateA = a.createdAt || new Date(0);
     const dateB = b.createdAt || new Date(0);
     return new Date(dateB).getTime() - new Date(dateA).getTime();
   });
+
+  const handleCopyLink = (id: string) => {
+    const interviewUrl = `${window.location.origin}/test/${id}`;
+    navigator.clipboard.writeText(interviewUrl);
+    toast({ title: 'Copiado', description: 'Enlace copiado al portapapeles.' });
+  }
 
   return (
     <Card>
@@ -37,7 +47,7 @@ export default function InterviewList({ interviews }: InterviewListProps) {
               <TableHead>Nombre</TableHead>
               <TableHead>Estado</TableHead>
               <TableHead>Fecha de Creación</TableHead>
-              <TableHead>Acciones</TableHead>
+              <TableHead className="text-right">Acciones</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -53,12 +63,23 @@ export default function InterviewList({ interviews }: InterviewListProps) {
                   <TableCell>
                     {interview.createdAt ? new Date(interview.createdAt).toLocaleDateString() : 'N/A'}
                   </TableCell>
-                  <TableCell>
-                    <Button asChild variant="outline" size="sm" disabled={interview.status !== 'completed'}>
-                      <Link href={`/admin/interview/${interview.id}`}>
-                        Ver Resultados
-                      </Link>
-                    </Button>
+                  <TableCell className="text-right space-x-2">
+                    {interview.status === 'completed' ? (
+                        <Button asChild variant="outline" size="sm">
+                          <Link href={`/admin/interview/${interview.id}`}>
+                            Ver Resultados
+                          </Link>
+                        </Button>
+                    ) : (
+                        <>
+                            <Button variant="ghost" size="sm" onClick={() => handleCopyLink(interview.id)}>
+                                Copiar Enlace
+                            </Button>
+                            <Button variant="outline" size="sm" onClick={() => onEdit(interview)}>
+                                Editar
+                            </Button>
+                        </>
+                    )}
                   </TableCell>
                 </TableRow>
               ))

@@ -75,3 +75,21 @@ export async function saveInterviewResults(id: string, scores: PersonalizedRecom
     return { error: "Failed to save interview results." };
   }
 }
+
+export async function updateInterviewName(id: string, name: string) {
+  try {
+    const interview = interviewStore.get(id);
+    if (interview) {
+      if (interview.status === 'completed') {
+        return { error: "Cannot edit a completed interview."};
+      }
+      const updatedInterview = { ...interview, name };
+      interviewStore.set(id, updatedInterview);
+      return { success: true };
+    }
+    return { error: "Interview not found." };
+  } catch (error) {
+    console.error("Error updating interview name:", error);
+    return { error: "Failed to update interview name." };
+  }
+}

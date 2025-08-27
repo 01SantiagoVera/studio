@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/use-auth';
-import { createInterview, getInterviews } from '../actions';
+import { createInterview, getInterviews, updateInterviewName } from '../actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,12 +12,15 @@ import InterviewList from '@/components/admin/interview-list';
 import {
   AlertDialog,
   AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
 
 export default function AdminPage() {
   const { user, loading, logout } = useAuth();
@@ -27,6 +30,10 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState('');
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  
+  const [editingInterview, setEditingInterview] = useState<any>(null);
+  const [editingName, setEditingName] = useState('');
+
   const { toast } = useToast();
 
   useEffect(() => {
@@ -69,6 +76,26 @@ export default function AdminPage() {
     navigator.clipboard.writeText(generatedUrl);
     toast({ title: 'Copiado', description: 'Enlace copiado al portapapeles.' });
   };
+  
+  const handleOpenEditDialog = (interview: any) => {
+    setEditingInterview(interview);
+    setEditingName(interview.name);
+  };
+
+  const handleUpdateName = async () => {
+    if (!editingInterview || !editingName.trim()) return;
+    setIsLoading(true);
+    const { success, error } = await updateInterviewName(editingInterview.id, editingName);
+    if (error) {
+      toast({ title: "Error", description: error, variant: 'destructive' });
+    } else if (success) {
+      toast({ title: 'Éxito', description: 'El nombre ha sido actualizado.' });
+      setEditingInterview(null);
+      fetchInterviews();
+    }
+    setIsLoading(false);
+  };
+
 
   const handleLogout = () => {
     logout();
@@ -104,7 +131,7 @@ export default function AdminPage() {
             </CardContent>
           </Card>
 
-          <InterviewList interviews={interviews} />
+          <InterviewList interviews={interviews} onEdit={handleOpenEditDialog} />
         </div>
       </main>
 
@@ -129,6 +156,36 @@ export default function AdminPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      
+      <Dialog open={!!editingInterview} onOpenChange={() => setEditingInterview(null)}>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>Editar Nombre del Entrevistado</DialogTitle>
+                <DialogDescription>
+                    Actualiza el nombre para esta sesión de entrevista.
+                </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">
+                        Nombre
+                    </Label>
+                    <Input
+                        id="name"
+                        value={editingName}
+                        onChange={(e) => setEditingName(e.target.value)}
+                        className="col-span-3"
+                    />
+                </div>
+            </div>
+            <DialogFooter>
+                <Button variant="outline" onClick={() => setEditingInterview(null)}>Cancelar</Button>
+                <Button onClick={handleUpdateName} disabled={isLoading}>
+                    {isLoading ? "Guardando..." : "Guardar Cambios"}
+                </Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
     </>
   );
 }
