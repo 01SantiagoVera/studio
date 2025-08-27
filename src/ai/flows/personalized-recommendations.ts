@@ -32,14 +32,14 @@ const prompt = ai.definePrompt({
   name: 'personalizedRecommendationsPrompt',
   input: {schema: PersonalizedRecommendationsInputSchema},
   output: {schema: PersonalizedRecommendationsOutputSchema},
-  prompt: `Based on the following aptitude assessment scores, provide personalized career and development recommendations.
+  prompt: `Basado en los siguientes puntajes de evaluación de aptitudes, proporciona recomendaciones personalizadas de carrera y desarrollo en español.
 
-Clarifier Score: {{{clarifierScore}}}
-Ideator Score: {{{ideatorScore}}}
-Developer Score: {{{developerScore}}}
-Implementer Score: {{{implementerScore}}}
+Puntaje de Clarificador: {{{clarifierScore}}}
+Puntaje de Ideador: {{{ideatorScore}}}
+Puntaje de Desarrollador: {{{developerScore}}}
+Puntaje de Implementador: {{{implementerScore}}}
 
-Consider the strengths indicated by the higher scores and suggest relevant career paths, development resources, or roles that align with these strengths. Provide specific and actionable advice to help the user leverage their aptitudes for professional growth.`,
+Considera las fortalezas indicadas por los puntajes más altos y sugiere trayectorias profesionales relevantes, recursos de desarrollo o roles que se alineen con estas fortalezas. Proporciona consejos específicos y procesables para ayudar al usuario a aprovechar sus aptitudes para el crecimiento profesional. La respuesta debe estar completamente en español.`,
 });
 
 const personalizedRecommendationsFlow = ai.defineFlow(
